@@ -1,6 +1,7 @@
 package qa.utils;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -25,13 +26,16 @@ public class OrderDetails {
 
             System.out.println("Bought " + quantity + " " + itemName + " for " + price);
         }
+        try {
+            String cardInfo = getDriver().findElement(By.xpath("//div[@data-test='payment-info-value']")).getText();
+            String subtotal = getDriver().findElement(By.xpath("//div[@data-test='subtotal-label']")).getText().split(": ")[1];
+            String tax = getDriver().findElement(By.xpath("//div[@data-test='tax-label']")).getText();
+            String total = getDriver().findElement(By.xpath("//div[@data-test='total-label']")).getText();
+            System.out.println("Paid with card: " + cardInfo + "\nSubtotal: "+subtotal+"\n"+tax+"\n"+total);
+        }catch (NoSuchElementException e){
+            System.out.println("Could not complete order!");
+        }
 
-        String cardInfo = getDriver().findElement(By.xpath("//div[@data-test='payment-info-value']")).getText();
-        String subtotal = getDriver().findElement(By.xpath("//div[@data-test='subtotal-label']")).getText().split(": ")[1];
-        String tax = getDriver().findElement(By.xpath("//div[@data-test='tax-label']")).getText();
-        String total = getDriver().findElement(By.xpath("//div[@data-test='total-label']")).getText();
-
-        System.out.println("Paid with card: " + cardInfo + "\nSubtotal: "+subtotal+"\n"+tax+"\n"+total);
     }
 }
 

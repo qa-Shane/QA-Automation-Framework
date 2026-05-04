@@ -8,7 +8,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 public class BaseWindowlessTest {
-    private WebDriver driver;
+    private ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     @BeforeMethod
     public void setup(){
@@ -19,14 +19,16 @@ public class BaseWindowlessTest {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless=new");
         options.addArguments("--window-size=1920,1080");
-        driver = new ChromeDriver(options);
+        driver.set(new ChromeDriver(options));
     }
 
-    public WebDriver getDriver(){return driver;}
+    public WebDriver getDriver(){return driver.get();}
 
     @AfterMethod
     public void teardown(){
-        if(driver != null)
-            driver.quit();
+        if(driver != null) {
+            driver.get().quit();
+            driver.remove();
+        }
     }
 }

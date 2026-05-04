@@ -17,5 +17,10 @@ public class AddToCartDemo {
                 element.findElement(By.xpath(".//button")).click();
             }
         }
+        try {
+            CheckoutDemo.checkout(driver);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

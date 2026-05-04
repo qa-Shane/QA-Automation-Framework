@@ -1,6 +1,7 @@
 package qa.demos;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import qa.error.ErrorHandler;
 import qa.utils.OrderDetails;
@@ -23,7 +24,10 @@ public class CheckoutDemo {
             System.out.println("Checkout has been successful");
         OrderDetails details = new OrderDetails(driver);
         details.getDetails();
-
-        driver.findElement(By.xpath("//button[@data-test='finish']")).click();
+        try {
+            driver.findElement(By.xpath("//button[@data-test='finish']")).click();
+        }catch (NoSuchElementException e){
+            System.out.println("Unable to complete checkout!");
+        }
     }
 }

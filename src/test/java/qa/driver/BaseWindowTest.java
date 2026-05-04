@@ -8,7 +8,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 public class BaseWindowTest {
-    private WebDriver driver;
+    private ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     @BeforeMethod
     public void setup(){
@@ -17,15 +17,17 @@ public class BaseWindowTest {
         options.setBinary("/usr/bin/brave-browser");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
-        driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
+        driver.set(new ChromeDriver(options));
+        driver.get().manage().window().maximize();
     }
 
-    public WebDriver getDriver(){return driver;}
+    public WebDriver getDriver(){return driver.get();}
 
     @AfterMethod
     public void teardown(){
-        if(driver != null)
-            driver.quit();
+        if(driver != null) {
+            driver.get().quit();
+            driver.remove();
+        }
     }
 }
